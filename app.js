@@ -23,11 +23,27 @@ let questions = [
     type: "input",
     name: "name",
     message: "Name: ",
+    // validate length < 50
+    validate: function(value) {
+      if (value.length < 50) return true;
+      return "Name too long"
+    }
   },
   {
-    type: "number",
+    type: "input",
     name: "id",
     message: "ID: ",
+    
+    // validate answer id is a number and isn't already chosen
+    validate: function(value) {
+      const result = parseInt(value);
+      if (isNaN(result)) return "ID must be a number";
+      
+      const result2 = ids.filter(elem => elem == value);
+      if (result2.length == 0) return true;
+      return "ID Already Chosen. Please Choose Another";
+    },
+    
   },
   {
     type: "input",
@@ -46,6 +62,11 @@ let questions = [
     when: function(answers) {
       const value = answers.employeeType == "Engineer" ? true : false;
       return value;
+    },
+    // validate length < 30
+    validate: function(value) {
+      if (value.length < 30) return true;
+      return "Github name too long"
     }
   },
   {
@@ -55,6 +76,11 @@ let questions = [
     when: function(answers) {
       const value = answers.employeeType == "Intern" ? true : false;
       return value;
+    },
+    // validate length < 50
+    validate: function(value) {
+      if (value.length < 50) return true;
+      return "School name too long"
     }
   },
   {
@@ -64,6 +90,11 @@ let questions = [
     when: function(answers) {
       const value = answers.employeeType == "Manager" ? true : false;
       return value;
+    },
+    // validate string length < 50 (therefor numbers can go up to 50 digit number) 
+    validate: function(value) {
+      if (value.length < 50) return true;
+      return "School name too long"
     }
   },
 
@@ -74,15 +105,19 @@ let questions = [
   }
 ]
 
+
 let employees = [];
+let ids = [];
 
 // function that allows us to loop with promises
 async function promptLoop() {
   let bool = false;
   do {
     const answers = await inquirer.prompt(questions);
+    // push id to array for validating in inquirer id isn't already chosen
+    ids.push(answers.id);
     
-    // add employees to array
+    // add employees to employees array
     switch (answers.employeeType) {
       case "Manager":
         let manager = new Manager(answers.name, answers.id, answers.email, answers.officeNumber);
@@ -120,6 +155,7 @@ async function main() {
 
 
 }
+
 
 main();
 
