@@ -150,7 +150,7 @@ async function main() {
   
   fs.writeFile(outputPath, html, (err) => {
     if (err) throw err;
-    console.log("wrote html file");
+    console.log("Wrote Html File to output/team.html");
   })
 
 
